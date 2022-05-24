@@ -5,23 +5,19 @@
 } from 'three'*/
 import { ViewportManager } from './ViewportManager.js'
 
-const viewportElement = document.getElementById('canvas-container');
-const viewportManager = new ViewportManager(viewportElement);
+let viewportManager = undefined;
 
 bindEventListeners();
 animate();
 
 function bindEventListeners()
 {
-    window.addEventListener( 'resize', onWindowResize );
     document.addEventListener( 'keydown', onKeyDown );
-
-    viewportManager.bindEventListeners();
-}
-
-function onWindowResize()
-{
-    viewportManager.onWindowResize();
+    document.getElementById('start').addEventListener('click', () => {
+        const viewportElement = document.getElementById('canvas-container');
+        viewportManager = new ViewportManager(viewportElement);
+        document.getElementById('start').style.display = "none";
+    })
 }
 
 // DEBUG
@@ -40,5 +36,5 @@ function onKeyDown( event )
 function animate()
 {
     requestAnimationFrame( animate );
-    viewportManager.render();
+    if(viewportManager) viewportManager.render();
 }
