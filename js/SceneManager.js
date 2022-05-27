@@ -18,8 +18,10 @@ import { OBJLoader } from 'three-loaders/OBJLoader.js';
 
 import { DoubleSide } from 'three';
 
+import { Camera } from './Camera.js';
+
 class SceneManager{
-    static cameraModel;
+    static cameraObject;
     static loadModels(callback)
     {
         new MTLLoader()
@@ -32,7 +34,7 @@ class SceneManager{
                     .setMaterials(materials)
                     .setPath('models/camera/')
                     .load('camera.obj', function (object) {
-                        SceneManager.cameraModel = object;
+                        SceneManager.cameraObject = new Camera(object);
                         callback();
                     });
             });
@@ -79,13 +81,10 @@ class SceneManager{
             switch(this.id)
             {
                 case 1:
-                    const model = new Object3D().copy(SceneManager.cameraModel);
-                    this.scene.add(model);
-                    model.position.y = 0;
-                    objects.push({
-                        mesh: model,
-                        carried: false
-                    })
+                    const camera = Camera.copy(SceneManager.cameraObject);
+                    this.scene.add(camera.mesh);
+                    camera.mesh.position.set(0,0,0);
+                    objects.push(camera);
                     break;
                 case 2:
                     const mesh2 = new Mesh(new ConeGeometry(5, 20, 32), new MeshPhongMaterial({color: 0x0000ff}));
@@ -93,7 +92,7 @@ class SceneManager{
                     this.scene.add(mesh2);
                     objects.push({
                         mesh: mesh2,
-                        carried: false
+                        held: false
                     })
                     break;
                 case 3:
@@ -102,7 +101,7 @@ class SceneManager{
                     this.scene.add(mesh3);
                     objects.push({
                         mesh: mesh3,
-                        carried: false
+                        held: false
                     })
                     break;
             }
@@ -124,6 +123,32 @@ class SceneManager{
 
 
         /* SCENE OBJECTS MANAGEMENT */
+        function nearestObjectIndex()
+        {
+            if(objects.length <= 0)
+            {
+                console.error("Not any object in the scene");
+                return -1;
+            }
+            const objectsSortedByDistance = [...objects];
+            objectsSortedByDistance.sort((o1, o2) => o1.mesh.position.distanceTo(viewportManager.player.position) - o2.mesh.position.distanceTo(viewportManager.player.position));
+            return objects.indexOf(objectsSortedByDistance[0]);
+        }
+
+        function followPlayerMovement(object)
+        {
+            /* Position */
+            const newPosition = new Vector3().copy(viewportManager.player.position);
+            newPosition.y = 0;
+            newPosition.add(viewportManager.getForwardAxis().normalize());
+            object.mesh.position.copy(newPosition);
+
+            /* Rotation*/
+            const camDirection = new Vector3().addVectors(viewportManager.player.position, viewportManager.getForwardAxis().multiplyScalar(2));
+            camDirection.y -= viewportManager.player.position.y;
+            object.mesh.lookAt(camDirection);
+            object.mesh.rotateOnWorldAxis(Object3D.DefaultUp, Math.PI);
+        }
 
 
         /* USER'S ACTIONS */
@@ -139,13 +164,33 @@ class SceneManager{
                     endLevel = true;
                     break;
                 case 32: /*Space*/
-                    objects[0].carried = !objects[0].carried;
-                    if(!objects[0].carried)
+                    const objectHeld = objects.find(o => o.held);
+                    if(objectHeld)
                     {
-                        //objects[0].mesh.rotation.set(0, viewportManager.player.rotation.y, 0);
+                        objectHeld.held = false;
+                        document.getElementById("helper-text").innerHTML = objectHeld.name + " RELEASED";
+                        setTimeout(() => {
+                            document.getElementById("helper-text").style.display = "none"
+                            document.getElementById("helper-text").innerHTML = "";
+                        }, 1000);
+                    }
+                    else
+                    {
+                        const objectToHold = objects[nearestObjectIndex()];
+                        if(objectToHold.mesh.position.distanceTo(viewportManager.player.position) < 3)
+                        {
+                            objectToHold.held = true;
+                            document.getElementById("helper-text").innerHTML = objectToHold.name + " HELD";
+                            document.getElementById("helper-text").style.display = "block";
+                        }
                     }
                     break;
                 case 69: /*E*/
+                    const objectToInteract = objects[nearestObjectIndex()];
+                    if(objectToInteract.mesh.position.distanceTo(viewportManager.player.position) < 3)
+                    {
+                        objectToInteract.interact();
+                    }
                     break;
             }
         }
@@ -173,19 +218,8 @@ class SceneManager{
         /* SCENE UPDATE */
         this.update = function ()
         {
-            objects.forEach(o => {
-                if(o.carried)
-                {
-                    const newPosition = new Vector3().copy(viewportManager.player.position);
-                    newPosition.y = 0;
-                    newPosition.add(viewportManager.getForwardAxis().normalize());
-                    objects[0].mesh.position.copy(newPosition);
-                    const camDirection = new Vector3().addVectors(viewportManager.player.position, viewportManager.getForwardAxis().multiplyScalar(2));
-                    camDirection.y -= viewportManager.player.position.y;
-                    o.mesh.lookAt(camDirection);
-                    o.mesh.rotateOnWorldAxis(Object3D.DefaultUp, Math.PI);
-                }
-            });
+            const heldObject = objects.find(o => o.held);
+            if(heldObject) followPlayerMovement(heldObject);
 
             if(endLevel) this.changeLevel();
         }

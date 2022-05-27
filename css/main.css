@@ -41,11 +41,16 @@ h1{
     text-align: center;
 }
 
+.row.horizontal-center{
+    justify-content: center;
+    text-align: center;
+}
+
 .button{
     transition: .2s all ease;
     background-color: coral;
     cursor: pointer;
-    color: white;
+    color: aliceblue;
 }
 
 .button:hover{
@@ -58,6 +63,16 @@ h1{
     left:0px;
 }
 
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+}
+
 /* IDs */
 
 #start-screen{
@@ -68,4 +83,10 @@ h1{
 #start-button{
     width: 60vw;
     height: 60vh;
+}
+
+#helper-text-div{
+    top: 70vh;
+    font-size: 4vh;
+    color: aliceblue;
 }

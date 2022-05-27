@@ -1,8 +1,3 @@
-/*import {
-    Vector2,
-    Vector3,
-    Raycaster
-} from 'three'*/
 import { ViewportManager } from './ViewportManager.js'
 
 let viewportManager = undefined;
@@ -36,6 +31,6 @@ function onKeyDown( event )
 //RENDER
 function animate()
 {
-    requestAnimationFrame( animate );
+    requestAnimationFrame(animate);
     if(viewportManager) viewportManager.render();
 }
