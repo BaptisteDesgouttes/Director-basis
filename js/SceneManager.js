@@ -9,7 +9,8 @@ import {
     Mesh,
     MeshPhongMaterial,
     Color,
-    Scene
+    Scene,
+    Vector3
 } from 'three';
 
 import { MTLLoader } from 'three-loaders/MTLLoader.js';
@@ -40,6 +41,9 @@ class SceneManager{
     {
         this.id = id
         this.scene = new Scene();
+        
+        // Scene objects
+        const objects = [];
         
         let endLevel = false;
 
@@ -78,16 +82,28 @@ class SceneManager{
                     const model = new Object3D().copy(SceneManager.cameraModel);
                     this.scene.add(model);
                     model.position.y = 0;
+                    objects.push({
+                        mesh: model,
+                        carried: false
+                    })
                     break;
                 case 2:
                     const mesh2 = new Mesh(new ConeGeometry(5, 20, 32), new MeshPhongMaterial({color: 0x0000ff}));
                     mesh2.position.x = 10;
                     this.scene.add(mesh2);
+                    objects.push({
+                        mesh: mesh2,
+                        carried: false
+                    })
                     break;
                 case 3:
                     const mesh3 = new Mesh(new CylinderGeometry(5, 5, 20, 32), new MeshPhongMaterial({color: 0xff0000}));
                     mesh3.position.x = -10;
                     this.scene.add(mesh3);
+                    objects.push({
+                        mesh: mesh3,
+                        carried: false
+                    })
                     break;
             }
         }
@@ -122,6 +138,15 @@ class SceneManager{
                 case 70: /*F*/
                     endLevel = true;
                     break;
+                case 32: /*Space*/
+                    objects[0].carried = !objects[0].carried;
+                    if(!objects[0].carried)
+                    {
+                        //objects[0].mesh.rotation.set(0, viewportManager.player.rotation.y, 0);
+                    }
+                    break;
+                case 69: /*E*/
+                    break;
             }
         }
 
@@ -148,6 +173,20 @@ class SceneManager{
         /* SCENE UPDATE */
         this.update = function ()
         {
+            objects.forEach(o => {
+                if(o.carried)
+                {
+                    const newPosition = new Vector3().copy(viewportManager.player.position);
+                    newPosition.y = 0;
+                    newPosition.add(viewportManager.getForwardAxis().normalize());
+                    objects[0].mesh.position.copy(newPosition);
+                    const camDirection = new Vector3().addVectors(viewportManager.player.position, viewportManager.getForwardAxis().multiplyScalar(2));
+                    camDirection.y -= viewportManager.player.position.y;
+                    o.mesh.lookAt(camDirection);
+                    o.mesh.rotateOnWorldAxis(Object3D.DefaultUp, Math.PI);
+                }
+            });
+
             if(endLevel) this.changeLevel();
         }
 

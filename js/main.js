@@ -13,10 +13,11 @@ animate();
 function bindEventListeners()
 {
     document.addEventListener( 'keydown', onKeyDown );
-    document.getElementById('start').addEventListener('click', () => {
+    document.getElementById('start-button').addEventListener('click', () => {
+        document.getElementById('levels').style.display = "block";
         const viewportElement = document.getElementById('canvas-container');
         viewportManager = new ViewportManager(viewportElement);
-        document.getElementById('start').style.display = "none";
+        document.getElementById('start-screen').style.display = "none";
     })
 }
 
