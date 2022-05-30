@@ -5,7 +5,7 @@ class Dummy{
         this.mesh = model;
         this.held = false;
         this.interacting = false;
-        this.name = "PERSONNAGE";
+        this.name = "PERSONNE";
 
         this.dispose = function()
         {
