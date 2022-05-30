@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); /*font-family: "Roboto", sans-serif; */
+@import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap'); /*font-family: 'Cutive Mono', monospace; */
    
 * {
     font-size: 100%;
@@ -33,15 +34,24 @@ h1{
 
 .row{
     display: flex;
+    flex-direction: row;
 }
 
-.row.center{
+.column{
+    display: flex;
+    flex-direction: column;
+}
+
+.column.right{
+    align-items: flex-end;
+}
+
+.column.left{
+    align-items: flex-start;
+}
+
+.center{
     align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.row.horizontal-center{
     justify-content: center;
     text-align: center;
 }
@@ -59,8 +69,6 @@ h1{
 
 .over{
     position: absolute;
-    top:0px;
-    left:0px;
 }
 
 .noselect {
@@ -73,6 +81,10 @@ h1{
                                     supported by Chrome, Edge, Opera and Firefox */
 }
 
+.scenario-text{
+    font-family: 'Cutive Mono', monospace;
+}
+
 /* IDs */
 
 #start-screen{
@@ -83,6 +95,34 @@ h1{
 #start-button{
     width: 60vw;
     height: 60vh;
+}
+
+#rules{
+    width: 60vw;
+    height: 80vh;
+    top: 30px;
+    left: 30px;
+}
+#rules-content{
+    width: 30vw;
+}
+
+#scenario{
+    width: 315px;
+    height: 259px;
+    background-image: url("../img/paper.png");
+    background-size: 100% 100%;
+    top: 30px;
+    right: 30px;
+}
+
+#scenario-content{
+    margin: 40px;
+}
+
+#controls{
+    left: 30px;
+    bottom: 30px;
 }
 
 #helper-text-div{

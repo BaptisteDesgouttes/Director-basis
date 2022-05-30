@@ -26,7 +26,7 @@ class ViewportManager{
         this.player = buildPlayer();
         const player = this.player;
 
-        this.sceneManager = new SceneManager(this, 1);
+        this.sceneManager = new SceneManager(this);
 
         this.timeManager = Date.now();
 

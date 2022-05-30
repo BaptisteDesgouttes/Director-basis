@@ -18,6 +18,8 @@ import { OBJLoader } from 'three-loaders/OBJLoader.js';
 
 import { DoubleSide } from 'three';
 
+import { levelsContent } from './contents.js'
+
 import { Camera } from './Camera.js';
 
 class SceneManager{
@@ -39,7 +41,7 @@ class SceneManager{
                     });
             });
     }
-    constructor(viewportManager, id)
+    constructor(viewportManager, id = 0)
     {
         this.id = id
         this.scene = new Scene();
@@ -55,7 +57,7 @@ class SceneManager{
         this.initScene = function()
         {
             // Lighting
-            const ambient = new AmbientLight( 0xffffff, 5 );
+            const ambient = new AmbientLight( 0xffffff, 0.8 );
             this.scene.add(ambient);
 
             // Floor
@@ -65,28 +67,34 @@ class SceneManager{
             // DEBUG
             const grid = new GridHelper(this.size, this.size);
             this.scene.add(grid);
+            
+            // TEXT CONTENT
+            document.getElementById('rules').innerHTML = levelsContent[this.id].rule;
+            document.getElementById('scenario-content').innerHTML = levelsContent[this.id].scenario;
 
             switch(this.id)
             {
-                case 1:
+                case 0:
                     this.scene.background = new Color(0x008888);
                     break;
-                case 2:
+                case 1:
                     this.scene.background = new Color(0x888800);
                     break;
-                case 3:
+                case 2:
                     this.scene.background = new Color(0x880088);
                     break;
             }
+
+            // MODELS LOADING
             switch(this.id)
             {
-                case 1:
+                case 0:
                     const camera = Camera.copy(SceneManager.cameraObject);
                     this.scene.add(camera.mesh);
                     camera.mesh.position.set(0,0,0);
                     objects.push(camera);
                     break;
-                case 2:
+                case 1:
                     const mesh2 = new Mesh(new ConeGeometry(5, 20, 32), new MeshPhongMaterial({color: 0x0000ff}));
                     mesh2.position.x = 10;
                     this.scene.add(mesh2);
@@ -95,7 +103,7 @@ class SceneManager{
                         held: false
                     })
                     break;
-                case 3:
+                case 2:
                     const mesh3 = new Mesh(new CylinderGeometry(5, 5, 20, 32), new MeshPhongMaterial({color: 0xff0000}));
                     mesh3.position.x = -10;
                     this.scene.add(mesh3);
@@ -109,7 +117,7 @@ class SceneManager{
 
         function buildFloorMesh(size)
         {
-            const materialFloor = new MeshPhongMaterial({color: 0x111111});
+            const materialFloor = new MeshPhongMaterial({color: 0x3e2a1e});
             materialFloor.side = DoubleSide;
             
             const geometryFloor = new PlaneGeometry(size, size);
@@ -168,7 +176,7 @@ class SceneManager{
                     if(objectHeld)
                     {
                         objectHeld.held = false;
-                        document.getElementById("helper-text").innerHTML = objectHeld.name + " RELEASED";
+                        document.getElementById("helper-text").innerHTML = objectHeld.name + " LÂCHÉE";
                         setTimeout(() => {
                             document.getElementById("helper-text").style.display = "none"
                             document.getElementById("helper-text").innerHTML = "";
@@ -180,7 +188,7 @@ class SceneManager{
                         if(objectToHold.mesh.position.distanceTo(viewportManager.player.position) < 3)
                         {
                             objectToHold.held = true;
-                            document.getElementById("helper-text").innerHTML = objectToHold.name + " HELD";
+                            document.getElementById("helper-text").innerHTML = objectToHold.name + " TENUE";
                             document.getElementById("helper-text").style.display = "block";
                         }
                     }
@@ -199,7 +207,11 @@ class SceneManager{
         this.changeLevel = function()
         {
             this.dispose();
-            viewportManager.sceneManager = new SceneManager(viewportManager, this.id + 1);
+            if(this.id + 1 < levelsContent.length) viewportManager.sceneManager = new SceneManager(viewportManager, this.id + 1);
+            else
+            {
+                console.log("fini");
+            }
         }
 
         /* DELETE LEVEL */

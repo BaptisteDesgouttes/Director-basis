@@ -2,11 +2,10 @@ class Camera{
     static copy = (camera) => new Camera(camera.mesh);
     constructor(model)
     {
-        console.log(model);
         this.mesh = model;
         this.held = false;
         this.interacting = false;
-        this.name = "CAMERA";
+        this.name = "CAMÉRA";
 
         this.dispose = function()
         {
