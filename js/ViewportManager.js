@@ -75,6 +75,13 @@ class ViewportManager{
             return player;
         }
 
+        this.resetPlayer = function()
+        {
+            player.position.set(0, 1.7, 10);
+            player.rotation.set(0, 0, 0);
+            forwardAxis.set(0, 0, -1);
+        }
+
         /* USER'S ACTIONS */
         function bindEventListeners()
         {

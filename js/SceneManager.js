@@ -21,9 +21,12 @@ import { OBJLoader } from 'three-loaders/OBJLoader.js';
 import { levelsContent } from './contents.js'
 
 import { Camera } from './Camera.js';
+import { Dummy } from './Dummy.js';
 
 class SceneManager{
     static cameraObject;
+    static blueDummy;
+    static redDummy;
     static loadModels(callback)
     {
         new MTLLoader()
@@ -37,10 +40,41 @@ class SceneManager{
                     .setPath('models/camera/')
                     .load('camera.obj', function (object) {
                         SceneManager.cameraObject = new Camera(object);
+                        
+        //onLoad
+        new MTLLoader()
+            .setPath( 'models/dummies/' )
+            .load('redDummy.mtl', function (materials) {
+
+                materials.preload();
+
+                new OBJLoader()
+                    .setMaterials(materials)
+                    .setPath('models/dummies/')
+                    .load('redDummy.obj', function (object) {
+                        SceneManager.redDummy = new Dummy(object);
+
+        //onLoad
+        new MTLLoader()
+            .setPath( 'models/dummies/' )
+            .load('blueDummy.mtl', function (materials) {
+
+                materials.preload();
+
+                new OBJLoader()
+                    .setMaterials(materials)
+                    .setPath('models/dummies/')
+                    .load('blueDummy.obj', function (object) {
+                        SceneManager.blueDummy = new Dummy(object);
                         callback();
                     });
             });
+        });
+        });
+        });
+        });
     }
+    
     constructor(viewportManager, id = 0)
     {
         this.id = id
@@ -89,29 +123,68 @@ class SceneManager{
             switch(this.id)
             {
                 case 0:
+                {
+                    //Camera
                     const camera = Camera.copy(SceneManager.cameraObject);
                     this.scene.add(camera.mesh);
                     camera.mesh.position.set(0,0,0);
                     objects.push(camera);
+                    
+                    //Blue
+                    const blueDummy = Dummy.copy(SceneManager.blueDummy);
+                    this.scene.add(blueDummy.mesh);
+                    blueDummy.mesh.position.set(1,0,3);
+                    objects.push(blueDummy);
+                    
+                    //Red
+                    const redDummy = Dummy.copy(SceneManager.redDummy);
+                    this.scene.add(redDummy.mesh);
+                    redDummy.mesh.position.set(-1,0,3);
+                    objects.push(redDummy);
                     break;
+                }
                 case 1:
-                    const mesh2 = new Mesh(new ConeGeometry(5, 20, 32), new MeshPhongMaterial({color: 0x0000ff}));
-                    mesh2.position.x = 10;
-                    this.scene.add(mesh2);
-                    objects.push({
-                        mesh: mesh2,
-                        held: false
-                    })
+                {
+                    //Camera
+                    const camera = Camera.copy(SceneManager.cameraObject);
+                    this.scene.add(camera.mesh);
+                    camera.mesh.position.set(0,0,0);
+                    objects.push(camera);
+                    
+                    //Blue
+                    const blueDummy = Dummy.copy(SceneManager.blueDummy);
+                    this.scene.add(blueDummy.mesh);
+                    blueDummy.mesh.position.set(1,0,3);
+                    objects.push(blueDummy);
+                    
+                    //Red
+                    const redDummy = Dummy.copy(SceneManager.redDummy);
+                    this.scene.add(redDummy.mesh);
+                    redDummy.mesh.position.set(-1,0,3);
+                    objects.push(redDummy);
                     break;
+                }
                 case 2:
-                    const mesh3 = new Mesh(new CylinderGeometry(5, 5, 20, 32), new MeshPhongMaterial({color: 0xff0000}));
-                    mesh3.position.x = -10;
-                    this.scene.add(mesh3);
-                    objects.push({
-                        mesh: mesh3,
-                        held: false
-                    })
+                {
+                    //Camera
+                    const camera = Camera.copy(SceneManager.cameraObject);
+                    this.scene.add(camera.mesh);
+                    camera.mesh.position.set(0,0,0);
+                    objects.push(camera);
+                    
+                    //Blue
+                    const blueDummy = Dummy.copy(SceneManager.blueDummy);
+                    this.scene.add(blueDummy.mesh);
+                    blueDummy.mesh.position.set(1,0,3);
+                    objects.push(blueDummy);
+                    
+                    //Red
+                    const redDummy = Dummy.copy(SceneManager.redDummy);
+                    this.scene.add(redDummy.mesh);
+                    redDummy.mesh.position.set(-1,0,3);
+                    objects.push(redDummy);
                     break;
+                }
             }
         }
 
@@ -168,9 +241,6 @@ class SceneManager{
         function onKeyDown(event)
         {
             switch (event.keyCode) {
-                case 70: /*F*/
-                    endLevel = true;
-                    break;
                 case 32: /*Space*/
                     const objectHeld = objects.find(o => o.held);
                     if(objectHeld)
@@ -204,13 +274,27 @@ class SceneManager{
         }
 
         /* CHANGE LEVEL */
+        this.displayEndScreen = function()
+        {
+            document.getElementById('end-screen').style.display = 'block';
+            document.getElementById('action-button-container').style.display = 'none';
+        }
+
         this.changeLevel = function()
         {
             this.dispose();
-            if(this.id + 1 < levelsContent.length) viewportManager.sceneManager = new SceneManager(viewportManager, this.id + 1);
+            if(this.id + 1 < levelsContent.length)
+            {
+                viewportManager.resetPlayer();
+                viewportManager.sceneManager = new SceneManager(viewportManager, this.id + 1);
+                document.getElementById('end-screen').style.display = 'none';
+                document.getElementById('action-button-container').style.display = 'block';
+            }
             else
             {
-                console.log("fini");
+                console.log("end")
+                document.getElementById('end-screen').style.display = 'none';
+                document.getElementById('end-demo').style.display = 'block';
             }
         }
 

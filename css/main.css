@@ -42,6 +42,14 @@ h1{
     flex-direction: column;
 }
 
+.row.right{
+    justify-content: flex-end;
+}
+
+.row.bottom{
+    align-items: flex-end;
+}
+
 .column.right{
     align-items: flex-end;
 }
@@ -61,6 +69,7 @@ h1{
     background-color: coral;
     cursor: pointer;
     color: aliceblue;
+    padding: 10px;
 }
 
 .button:hover{
@@ -69,6 +78,10 @@ h1{
 
 .over{
     position: absolute;
+}
+
+.bottom{
+    bottom: 30px;
 }
 
 .noselect {
@@ -125,8 +138,36 @@ h1{
     bottom: 30px;
 }
 
+#action-button{
+    right: 30px;
+}
+
+#action-button-content{
+    width: 20vw;
+}
+
 #helper-text-div{
     top: 70vh;
     font-size: 4vh;
     color: aliceblue;
+}
+
+#end-screen{
+    top: 0px;
+    left: 0px;
+}
+
+#end-screen{
+    background-color: blanchedalmond;
+    min-height: 10em;
+}
+
+#next-level{
+    margin: 30px;
+}
+
+#end-demo{
+    background-color: blanchedalmond;
+    top: 0px;
+    left: 0px;
 }

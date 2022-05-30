@@ -13,7 +13,7 @@
 		</div>
 
         <!-- LEVELS -->
-		<div id="levels" class="hidden">
+		<div id="level" class="hidden">
 			<div id="canvas-container" class="full-width full-height"></div>
 
 			<div id="helper-text-div" class="full-width row center over">
@@ -29,8 +29,17 @@
 			
 			<div id="controls-container" class="column left bottom">
 				<div id="controls" class="over noselect">
+					<p><strong>Z, Q, S, D</strong> pour se déplacer</p>
 					<p><strong>Espace</strong> pour attraper un objet</p>
 					<p><strong>E</strong> pour intéragir avec un objet</p>
+				</div>
+			</div>
+
+			<div id="action-button-container" class="column right">
+				<div id="action-button" class="over bottom row center">
+					<div id="action-button-content" class="button">
+						<p>ACTION ></p>
+					</div>
 				</div>
 			</div>
 			
@@ -44,7 +53,22 @@
 		</div>
 
 		<!-- INTER-SCREENS -->
-		<div id="inter-screens" class="hidden">
+		<div id="end-screen" class="over hidden full-width full-height">
+			<div id="end-screen-content" class="full-height row right bottom">
+				<div id="next-level" class="column right button">
+					<h1 id="next-level-button" class="noselect row">NIVEAU SUIVANT ></h1>
+				</div>
+			</div>
+		</div>
+
+		<!-- END DEMO SCREEN -->
+		<div id="end-demo" class="over hidden full-width full-height">
+			<div id="end-demo-content" class="full-height row center">
+				<div class="column center">
+					<h1 id="end-demo-text" class="noselect row">Fin de la démo</h1>
+					<p class="noselect row">Merci d'avoir joué !</p>
+				</div>
+			</div>
 		</div>
 
 

@@ -9,11 +9,13 @@ function bindEventListeners()
 {
     document.addEventListener( 'keydown', onKeyDown );
     document.getElementById('start-button').addEventListener('click', () => {
-        document.getElementById('levels').style.display = "block";
+        document.getElementById('level').style.display = "block";
         const viewportElement = document.getElementById('canvas-container');
         viewportManager = new ViewportManager(viewportElement);
         document.getElementById('start-screen').style.display = "none";
     })
+    document.getElementById('action-button').addEventListener('click', () => viewportManager.sceneManager.displayEndScreen());
+    document.getElementById('next-level').addEventListener('click', () => viewportManager.sceneManager.changeLevel());
 }
 
 // DEBUG
