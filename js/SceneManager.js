@@ -12,11 +12,11 @@ import {
     Scene,
     Vector3
 } from 'three';
+import { DoubleSide } from 'three';
 
 import { MTLLoader } from 'three-loaders/MTLLoader.js';
 import { OBJLoader } from 'three-loaders/OBJLoader.js';
 
-import { DoubleSide } from 'three';
 
 import { levelsContent } from './contents.js'
 
